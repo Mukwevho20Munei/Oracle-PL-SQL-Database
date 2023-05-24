@@ -1,0 +1,21 @@
+set serveroutput on
+declare
+ cust customer.first_name%Type;
+ prod product.product%Type;
+cursor info is
+ select cust.first_name || ', ' || cust.surname CUSTOMER, p.product
+ from customer cust, billing b, product_billing pb, product p
+ where cust.customer_id = b.customer_id
+ and b.bill_id = pb.bill_id
+ and p.product_id = pb.product_id
+ and p.price > 10000
+ order by p.price;
+begin
+for rec in info
+loop
+cust:= rec.CUSTOMER;
+ prod:= rec.product;
+ dbms_output.put_line('CUSTOMER: ' || cust || chr(13) || 'PRODUCT:' || prod);
+ dbms_output.put_line('--------------------');
+end loop;
+end;
